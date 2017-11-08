@@ -87,6 +87,15 @@ abstract class AbstractDateFilter extends Filter
                 return;
             }
 
+            // date filter should filter records for the whole days
+            if ($this->time === false) {
+                if ($data['value'] instanceof \DateTime && $data['type'] == DateType::TYPE_GREATER_EQUAL) {
+                    $data['value']->setTime(0, 0, 0);
+                }
+                if ($data['value'] instanceof \DateTime && $data['type'] == DateType::TYPE_LESS_EQUAL) {
+                    $data['value']->setTime(23, 59, 59);
+                }
+            }
             // default type for simple filter
             $data['type'] = !isset($data['type']) || !is_numeric($data['type']) ? DateType::TYPE_EQUAL : $data['type'];
 
